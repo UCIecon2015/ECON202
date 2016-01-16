@@ -1,0 +1,23 @@
+import scipy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+import scipy.stats as stats
+
+
+def montecarlo(m, n, df):
+	ybar=np.zeros(m)
+	for i in range(m):
+		x = np.random.uniform(0,1,n)
+		y=stats.t.ppf(x,df)
+		ybar[i]=sum(y)/n
+	z=ybar*n**.5
+
+	[obs,minmax, mean, var, skew, kurt] = stats.describe(z)
+	g=np.linspace(-3,3)
+	plt.hist(z, bins=100, normed=True, cumulative=True)
+	plt.plot(g, stats.norm.cdf(g,0,1))
+	plt.show()
+	
+	print(mean)
+	print(var)
