@@ -11,13 +11,56 @@ def montecarlo(m, n, df):
 		x = np.random.uniform(0,1,n)
 		y=stats.t.ppf(x,df)
 		ybar[i]=sum(y)/n
-	z=ybar*n**.5
+	z=ybar*(n**.5)
 
 	[obs,minmax, mean, var, skew, kurt] = stats.describe(z)
-	g=np.linspace(-3,3)
+	g=np.linspace(np.min(z),np.max(z))
 	plt.hist(z, bins=100, normed=True, cumulative=True)
-	plt.plot(g, stats.norm.cdf(g,0,1))
+	plt.plot(g, stats.norm.cdf(g,0,var))
 	plt.show()
+	
+	
+	print(mean)
+	print(var)
+	
+def montecarlomed(m, n, df):
+	med=np.zeros(m)
+	for i in range(m):
+		x = np.random.uniform(0,1,n)
+		y=stats.t.ppf(x,df)
+		med[i]=np.median(y)
+	z=med*(n**.5)
+
+	[obs,minmax, mean, var, skew, kurt] = stats.describe(z)
+	g=np.linspace(np.min(z),np.max(z))
+	plt.hist(z, bins=100, normed=True, cumulative=True)
+	plt.plot(g, stats.norm.cdf(g,0,var))
+	plt.show()
+	
+	
+	print(mean)
+	print(var)
+	
+	
+def montecarlomixnorm(m, n):
+	ybar=np.zeros(m)
+	y=np.zeros(n)
+	for i in range(m):
+		x = np.random.uniform(0,1,n)
+		for j in xrange(0,int(n*.1)-1):
+			y[j]=stats.norm.ppf(x[j],scale=20)
+		for k in xrange(int(n*.1),n):
+			y[k]=stats.norm.ppf(x[k])
+		ybar[i]=sum(y)/n
+	z=ybar*(n**.5)
+
+	[obs,minmax, mean, var, skew, kurt] = stats.describe(z)
+	
+	g=np.linspace(np.min(z),np.max(z))
+	plt.hist(z, bins=100, normed=True, cumulative=True)
+	plt.plot(g, stats.norm.cdf(g,0,4.81))
+	plt.show()
+	
 	
 	print(mean)
 	print(var)
