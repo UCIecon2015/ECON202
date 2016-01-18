@@ -24,22 +24,31 @@ def montecarlo(m, n, df):
 	[obs3,minmax3, mean3, var3, skew3, kurt3] = stats.describe(z_trimmed)
 	
 	g=np.linspace(np.min(z),np.max(z))
-	plt.hist(z, bins=100, normed=True)
+	plt.title('Mean')
+	plt.hist(z, bins=100, normed=True, color='green')
 	plt.plot(g, stats.norm.pdf(g,0,1))
 	
 	plt.show()
 	
+	print 'Mean: %s    Variance: %s' % (format(mean1, '.4f'), format(var1, '.4f'))
+	
 	g1=np.linspace(np.min(z_med),np.max(z_med))
-	plt.hist(z, bins=100, normed=True)
+	plt.title('Median')
+	plt.hist(z, bins=100, normed=True, color='red')
 	plt.plot(g1, stats.norm.pdf(g1,0,1))
+	
 	plt.show()
+
+	print 'Mean: %s    Variance: %s' % (format(mean2, '.4f'), format(var2, '.4f'))
 	
 	g2=np.linspace(np.min(z_trimmed),np.max(z_trimmed))
-	plt.hist(z_trimmed, bins=100, normed=True)
+	plt.title('Trimmed Mean')
+	plt.hist(z_trimmed, bins=100, normed=True, color='purple')
 	plt.plot(g2,stats.norm.pdf(g2,0,1))
 	
 	plt.show()
 
+	print 'Mean: %s    Variance: %s' % (format(mean3, '.4f'), format(var3, '.4f'))
 
 	
 def montecarlomixnorm(m, n):
@@ -65,18 +74,28 @@ def montecarlomixnorm(m, n):
 	[obs3,minmax3, mean3, var3, skew3, kurt3] = stats.describe(z_trimmed)
 
 	g=np.linspace(np.min(z),np.max(z))
-	plt.hist(z, bins=100, normed=True)
+	plt.title('Mean')
+	plt.hist(z, bins=100, normed=True, color='hotpink')
 	plt.plot(g, stats.norm.pdf(g,0,1))
 	
 	plt.show()
 	
+	print 'Mean: %s    Variance: %s' % (format(mean1, '.4f'), format(var1, '.4f'))
+	
 	g1=np.linspace(np.min(z_med),np.max(z_med))
-	plt.hist(z, bins=100, normed=True)
+	plt.title('Median')
+	plt.hist(z, bins=100, normed=True, color='orange')
 	plt.plot(g1, stats.norm.pdf(g1,0,1))
+	
 	plt.show()
 	
+	print 'Mean: %s    Variance: %s' % (format(mean2, '.4f'), format(var2, '.4f'))
+	
 	g2=np.linspace(np.min(z_trimmed),np.max(z_trimmed))
-	plt.hist(z_trimmed, bins=100, normed=True)
+	plt.title('Trimmed Mean')
+	plt.hist(z_trimmed, bins=100, normed=True, color='pink')
 	plt.plot(g2,stats.norm.pdf(g2,0,1))
 	
 	plt.show()
+	
+	print 'Mean: %s    Variance: %s' % (format(mean3, '.4f'), format(var3, '.4f'))
