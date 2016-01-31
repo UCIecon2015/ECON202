@@ -1,0 +1,54 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+
+
+def montecarlosimnorm(a,b,n,m):
+	betasim=np.zeros(1)
+	x=np.random.uniform(0,1,m)
+	x=np.mat(x)
+	x=np.reshape(x,(m,1))
+	for i in range(n):
+		e=np.random.normal(0,1,m)
+		e=np.mat(e)
+		e=np.reshape(e,(m,1))
+		y=a*np.ones((m,1))+b*x+e
+		y=np.mat(y)
+		beta=np.linalg.inv((np.transpose(x)*x))*(np.transpose(x)*y)
+		betasim=np.append(betasim,beta)
+	plt.hist(betasim[1:n],normed=True,bins=100)
+	plt.show()
+	
+def montecarlosimt(a,b,n,m):
+	betasim=np.zeros(1)
+	x=np.random.uniform(0,1,m)
+	x=np.mat(x)
+	x=np.reshape(x,(m,1))
+	for i in range(n):
+		e=stats.t.rvs(1, size=m)
+		e=np.mat(e)
+		e=np.reshape(e,(m,1))
+		y=a*np.ones((m,1))+b*x+e
+		y=np.mat(y)
+		beta=np.linalg.inv((np.transpose(x)*x))*(np.transpose(x)*y)
+		betasim=np.append(betasim,beta)
+	plt.hist(betasim[1:n],normed=True,bins=100)
+	plt.show()
+	
+	
+def montecarlosimbinary(a,b,n,m):
+	betasim=np.zeros(1)
+	x=np.random.uniform(0,1,m)
+	x=np.mat(x)
+	x=np.reshape(x,(m,1))
+	for i in range(n):
+		e=stats.randint.rvs(0,2,size=m)
+		e=np.mat(e)
+		e=np.reshape(e,(m,1))
+		y=a*np.ones((m,1))+b*x+e
+		y=np.mat(y)
+		beta=np.linalg.inv((np.transpose(x)*x))*(np.transpose(x)*y)
+		betasim=np.append(betasim,beta)
+	plt.hist(betasim[1:n],normed=True,bins=100)
+	plt.show()
+	
