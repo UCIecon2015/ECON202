@@ -1,0 +1,52 @@
+import numpy as np
+import scipy.stats as stats
+
+
+def Bstrap(b,nobs,iter,loop):
+	count=0
+	x=np.random.normal(0,10,nobs)
+	x=np.vstack([np.ones(len(x)),x]).T
+	b=np.vstack(b)
+	uppersim=np.zeros(1)
+	lowersim=np.zeros(1)
+	for k in range(loop):
+		a=[-1,1]
+		e=np.random.choice(a,nobs,replace=True)
+		e=np.vstack(e)
+		y=np.dot(x,b)
+		y=y+e
+		xinv=np.linalg.inv(np.dot(x.T,x))
+		beta=np.dot(np.dot(xinv,x.T),y)
+		alpha=beta[0]
+		beta=beta[1]
+		
+		s2=float(sum(np.hstack(e**2)))/(nobs)
+		se=np.dot(s2,xinv[1,1])
+		tsims=np.zeros(1)
+		for i in range(iter):
+			e=np.hstack(e)
+			estar = np.random.choice(e,len(e),replace=True)
+			z=np.random.uniform(0,1,len(e))
+			for j in range(len(z)):
+				if z[j] >(np.sqrt(5)+1)/(2*np.sqrt(5)):
+					z[j]=-(np.sqrt(5)+1)/2
+				else:
+					z[j]=(np.sqrt(5)+1)/2
+			estar=np.vstack(estar)*z
+			ynew=y+estar
+			xinv=np.linalg.inv(np.dot(x.T,x))
+			betanew=np.dot(np.dot(xinv,x.T),ynew)
+			betastar=betanew[1]
+			s=float(sum(np.hstack(estar**2)))/(nobs)
+			varbeta=np.dot(s,xinv[1,1])
+			t=(betastar-beta)/np.sqrt(varbeta)
+			tsims=np.append(tsims,t)
+		tsims=tsims[1:iter]
+		order=np.sort(tsims)
+		upper=stats.scoreatpercentile(order,95)
+		lower=stats.scoreatpercentile(order,5)
+
+		if b[1] > beta-(upper*np.sqrt(se)) and b[1] < beta-(lower*np.sqrt(se)):
+			count+=1
+	print "%i of %i iterations are in the confidence interval" % (count, loop)
+		 
