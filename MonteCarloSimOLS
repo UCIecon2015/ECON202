@@ -3,52 +3,77 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 
 
-def montecarlosimnorm(a,b,n,m):
+def MCnorm(b,iter,nobs):
+
 	betasim=np.zeros(1)
-	x=np.random.uniform(0,1,m)
-	x=np.mat(x)
-	x=np.reshape(x,(m,1))
-	for i in range(n):
-		e=np.random.normal(0,1,m)
-		e=np.mat(e)
-		e=np.reshape(e,(m,1))
-		y=a*np.ones((m,1))+b*x+e
-		y=np.mat(y)
-		beta=np.linalg.inv((np.transpose(x)*x))*(np.transpose(x)*y)
+	x=np.random.uniform(0,1,nobs)
+	x=np.vstack([np.ones(len(x)),x]).T
+	b=np.vstack(b)
+	for i in range(iter):
+		e=np.random.normal(0,1,nobs)
+		e=np.vstack(e)
+		y=np.dot(x,b)
+		y=y+e
+		xinv=np.linalg.inv(np.dot(x.T,x))
+		beta=np.dot(np.dot(xinv,x.T),y)
+		alpha=beta[0]
+		beta=beta[1]
 		betasim=np.append(betasim,beta)
-	plt.hist(betasim[1:n],normed=True,bins=100)
+	betasim=betasim[1:iter]
+	mean=np.mean(betasim)
+	var=np.var(betasim)
+	plt.hist(betasim,normed=True,bins=100)
+	plt.title('Monte Carlo Simulation %s Iterations' % iter)
+	plt.xlabel(r'$\hat \beta $')
+	print('Mean: %f' % mean)
+	print('Var: %f' % var)
+	plt.show()
+
+def MCt(b,iter,nobs):
+
+	betasim=np.zeros(1)
+	x=np.random.uniform(0,1,nobs)
+	x=np.vstack([np.ones(len(x)),x]).T
+	b=np.vstack(b)
+	for i in range(iter):
+		e=stats.t.rvs(1, size=nobs)
+		e=np.vstack(e)
+		y=np.dot(x,b)
+		y=y+e
+		xinv=np.linalg.inv(np.dot(x.T,x))
+		beta=np.dot(np.dot(xinv,x.T),y)
+		alpha=beta[0]
+		beta=beta[1]
+		betasim=np.append(betasim,beta)
+	betasim=betasim[1:iter]
+	plt.hist(betasim,normed=True,bins=100)
+	plt.title('Monte Carlo Simulation %s Iterations' % iter)
+	plt.xlabel(r'$\hat \beta $')
+
 	plt.show()
 	
-def montecarlosimt(a,b,n,m):
+def MCbinary(b,iter,nobs):
+
 	betasim=np.zeros(1)
-	x=np.random.uniform(0,1,m)
-	x=np.mat(x)
-	x=np.reshape(x,(m,1))
-	for i in range(n):
-		e=stats.t.rvs(1, size=m)
-		e=np.mat(e)
-		e=np.reshape(e,(m,1))
-		y=a*np.ones((m,1))+b*x+e
-		y=np.mat(y)
-		beta=np.linalg.inv((np.transpose(x)*x))*(np.transpose(x)*y)
+	x=np.random.uniform(0,1,nobs)
+	x=np.vstack([np.ones(len(x)),x]).T
+	b=np.vstack(b)
+	for i in range(iter):
+		e=stats.randint.rvs(0,2,size=nobs)
+		e=np.vstack(e)
+		y=np.dot(x,b)
+		y=y+e
+		xinv=np.linalg.inv(np.dot(x.T,x))
+		beta=np.dot(np.dot(xinv,x.T),y)
+		alpha=beta[0]
+		beta=beta[1]
 		betasim=np.append(betasim,beta)
-	plt.hist(betasim[1:n],normed=True,bins=100)
+	betasim=betasim[1:iter]
+	mean=np.mean(betasim)
+	var=np.var(betasim)
+	plt.hist(betasim,normed=True,bins=100)
+	plt.title('Monte Carlo Simulation %s Iterations' % iter)
+	plt.xlabel(r'$\hat \beta $')
+	print('Mean: %f' % mean)
+	print('Var: %f' % var)
 	plt.show()
-	
-	
-def montecarlosimbinary(a,b,n,m):
-	betasim=np.zeros(1)
-	x=np.random.uniform(0,1,m)
-	x=np.mat(x)
-	x=np.reshape(x,(m,1))
-	for i in range(n):
-		e=stats.randint.rvs(0,2,size=m)
-		e=np.mat(e)
-		e=np.reshape(e,(m,1))
-		y=a*np.ones((m,1))+b*x+e
-		y=np.mat(y)
-		beta=np.linalg.inv((np.transpose(x)*x))*(np.transpose(x)*y)
-		betasim=np.append(betasim,beta)
-	plt.hist(betasim[1:n],normed=True,bins=100)
-	plt.show()
-	
