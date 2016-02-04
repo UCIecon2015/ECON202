@@ -4,7 +4,7 @@ import scipy.stats as stats
 
 def Bstrap(b,nobs,iter,loop):
 	count=0
-	x=np.random.normal(0,10,nobs)
+	x=np.random.uniform(0,1,nobs)
 	x=np.vstack([np.ones(len(x)),x]).T
 	b=np.vstack(b)
 	uppersim=np.zeros(1)
